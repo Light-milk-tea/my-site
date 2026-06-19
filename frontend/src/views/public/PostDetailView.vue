@@ -1,14 +1,20 @@
 <template>
   <article v-if="post" class="post-detail">
     <RouterLink class="back-link" to="/">返回文章列表</RouterLink>
-    <h1>{{ post.title }}</h1>
-    <p class="summary">{{ post.summary }}</p>
-    <div class="meta">
-      <span>{{ formatDate(post.publishedAt || post.createdAt) }}</span>
-      <span v-if="post.category">{{ post.category.name }}</span>
-      <span v-for="tag in post.tags" :key="tag.id"># {{ tag.name }}</span>
+    <header class="post-detail-header">
+      <p class="eyebrow">Article</p>
+      <h1>{{ post.title }}</h1>
+      <p class="summary">{{ post.summary }}</p>
+      <div class="meta post-meta">
+        <span class="meta-pill">{{ formatDate(post.publishedAt || post.createdAt) }}</span>
+        <span v-if="post.category" class="meta-pill">{{ post.category.name }}</span>
+        <span v-for="tag in post.tags" :key="tag.id" class="meta-pill"># {{ tag.name }}</span>
+      </div>
+    </header>
+    <div class="post-divider" aria-hidden="true" />
+    <div class="markdown-shell">
+      <div class="markdown-body" v-html="html" />
     </div>
-    <div class="markdown-body" v-html="html" />
   </article>
   <el-empty v-else-if="!loading" description="文章不存在或尚未发布" />
 </template>
