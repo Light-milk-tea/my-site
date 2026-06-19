@@ -3,8 +3,12 @@ import { useAuthStore } from '../stores/auth'
 import AdminLayout from '../layouts/AdminLayout.vue'
 import PublicLayout from '../layouts/PublicLayout.vue'
 import AboutView from '../views/public/AboutView.vue'
+import CategoriesView from '../views/public/CategoriesView.vue'
+import FriendsView from '../views/public/FriendsView.vue'
 import HomeView from '../views/public/HomeView.vue'
 import PostDetailView from '../views/public/PostDetailView.vue'
+import PostsView from '../views/public/PostsView.vue'
+import TagsView from '../views/public/TagsView.vue'
 import AdminPostsView from '../views/admin/AdminPostsView.vue'
 import LoginView from '../views/admin/LoginView.vue'
 import PostEditorView from '../views/admin/PostEditorView.vue'
@@ -18,7 +22,11 @@ export const router = createRouter({
       component: PublicLayout,
       children: [
         { path: '', name: 'home', component: HomeView },
+        { path: 'posts', name: 'posts', component: PostsView },
         { path: 'posts/:slug', name: 'post-detail', component: PostDetailView },
+        { path: 'categories', name: 'categories', component: CategoriesView },
+        { path: 'tags', name: 'tags', component: TagsView },
+        { path: 'friends', name: 'friends', component: FriendsView },
         { path: 'about', name: 'about', component: AboutView },
       ],
     },
