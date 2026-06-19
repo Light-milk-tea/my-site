@@ -5,12 +5,14 @@
     </header>
 
     <section class="friends-grid" aria-label="友情链接卡片">
-      <article
+      <a
         v-for="(item, index) in friends"
         :key="item.url || `${item.name}-${index}`"
         class="friend-card"
         :class="{ 'friend-card--link': !!item.url }"
-        @click="openFriend(item.url)"
+        :href="item.url"
+        :target="item.url ? '_blank' : undefined"
+        :rel="item.url ? 'noopener noreferrer' : undefined"
       >
         <div class="friend-card-copy">
           <div class="friend-card-head">
@@ -20,6 +22,17 @@
           </div>
           <p>{{ item.description }}</p>
           <span>{{ item.domain }}</span>
+        </div>
+      </a>
+
+      <article class="friend-card friend-card--empty">
+        <div class="friend-card-copy">
+          <div class="friend-card-head">
+            <div class="friend-card-avatar">+</div>
+            <h3>友链整理中</h3>
+          </div>
+          <p>未来会在这里放一些长期阅读、风格相近的朋友站点。</p>
+          <span>coming soon</span>
         </div>
       </article>
     </section>
@@ -38,22 +51,7 @@ const friends = [
     avatar: avatarUrl,
     url: 'http://175.27.249.38/',
   },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
-  { name: 'Coming Soon', initial: 'A', description: '这里预留给未来会加入的朋友站点。', domain: 'friend-site.com' },
 ]
-
-function openFriend(url?: string) {
-  if (!url) return
-  window.location.assign(url)
-}
-
 </script>
 
 
@@ -100,6 +98,11 @@ function openFriend(url?: string) {
 
 .friend-card--link {
   cursor: pointer;
+}
+
+.friend-card--empty {
+  border-style: dashed;
+  opacity: 0.86;
 }
 
 .friends-grid {

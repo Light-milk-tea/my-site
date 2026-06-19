@@ -1,6 +1,6 @@
 <template>
   <article v-if="post" class="post-detail">
-    <RouterLink class="back-link" to="/">返回文章列表</RouterLink>
+    <RouterLink class="back-link" to="/posts">返回文章列表</RouterLink>
     <header class="post-detail-header">
       <p class="eyebrow">Article</p>
       <h1>{{ post.title }}</h1>
