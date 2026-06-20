@@ -10,6 +10,8 @@ fi
 
 docker compose pull postgres nginx certbot || true
 docker compose up -d --build
+docker compose up -d --no-deps --force-recreate nginx
+docker compose exec -T nginx nginx -s reload || true
 docker compose ps
 
 echo "Deployment finished."

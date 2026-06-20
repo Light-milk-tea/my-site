@@ -17,7 +17,15 @@
 
 <script setup lang="ts">
 import avatarUrl from '../../assets/avatar.jpg'
+import { useSeo } from '../../utils/seo'
 
 const profileName = '轻茗'
 const profileTagline = '在技术、生活与长期思考之间，留下缓慢但真实的记录。'
+
+useSeo({
+  title: "QingMing's Blog",
+  description: profileTagline,
+  path: '/',
+  image: avatarUrl,
+})
 </script>

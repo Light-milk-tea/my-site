@@ -1,7 +1,9 @@
 <template>
   <section class="friends-page">
     <header class="friends-hero">
-      <h1>friend</h1>
+      <p class="friends-kicker">Blogroll</p>
+      <h1>Friends</h1>
+      <p>这里会收集长期阅读、风格相近或彼此有真实交流的个人站点。</p>
     </header>
 
     <section class="friends-grid" aria-label="友情链接卡片">
@@ -29,10 +31,10 @@
         <div class="friend-card-copy">
           <div class="friend-card-head">
             <div class="friend-card-avatar">+</div>
-            <h3>友链整理中</h3>
+            <h3>欢迎交换友链</h3>
           </div>
-          <p>未来会在这里放一些长期阅读、风格相近的朋友站点。</p>
-          <span>coming soon</span>
+          <p>如果你也在认真维护个人博客，可以带着站点名称、地址、头像和一句简介来交换链接。</p>
+          <span>name / url / avatar / description</span>
         </div>
       </article>
     </section>
@@ -41,17 +43,24 @@
 
 <script setup lang="ts">
 import avatarUrl from '../../assets/avatar.jpg'
+import { useSeo } from '../../utils/seo'
 
 const friends = [
   {
-    name: "QingMing's Blog",
+    name: '轻茗',
     initial: 'Q',
-    description: '在技术、生活与长期思考之间，留下缓慢但真实的记录。',
+    description: '本站信息：技术、生活与长期思考之间的个人记录。',
     domain: '175.27.249.38',
     avatar: avatarUrl,
-    url: 'http://175.27.249.38/',
+    url: undefined,
   },
 ]
+
+useSeo({
+  title: '友情链接',
+  description: '轻茗的友链页面，收集长期阅读、风格相近或彼此有真实交流的个人站点。',
+  path: '/friends',
+})
 </script>
 
 
@@ -65,6 +74,13 @@ const friends = [
   margin-bottom: 30px;
   text-align: center;
 
+  p {
+    max-width: 620px;
+    margin: 12px auto 0;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
   h1 {
     margin: 0;
     font-size: clamp(38px, 7vw, 62px);
@@ -72,6 +88,13 @@ const friends = [
     letter-spacing: -0.03em;
     text-transform: lowercase;
   }
+}
+
+.friends-kicker {
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .friend-card {

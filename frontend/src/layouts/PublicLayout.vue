@@ -9,7 +9,6 @@
         <RouterLink to="/posts">Posts</RouterLink>
         <RouterLink to="/friends">Friends</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/admin">Admin</RouterLink>
       </nav>
     </header>
 
@@ -17,10 +16,16 @@
       <RouterView />
     </main>
 
-    <footer class="site-footer" aria-hidden="true" />
+    <footer class="site-footer">
+      <span>© {{ currentYear }} {{ siteTitle }}</span>
+      <div class="site-footer-links">
+        <RouterLink to="/login">Admin</RouterLink>
+      </div>
+    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
 const siteTitle = import.meta.env.VITE_SITE_TITLE || "QingMing's Blog"
+const currentYear = new Date().getFullYear()
 </script>

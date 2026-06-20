@@ -25,22 +25,43 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { blogApi } from '../../api/client'
 import type { Post } from '../../api/types'
+import { useSeo } from '../../utils/seo'
 
 const markdown = new MarkdownIt({ html: false, linkify: true, typographer: true })
+const defaultLinkOpen = markdown.renderer.rules.link_open
+markdown.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+  const token = tokens[idx]
+  const href = token.attrGet('href') || ''
+  if (/^https?:\/\//i.test(href)) {
+    token.attrSet('target', '_blank')
+    token.attrSet('rel', 'noopener noreferrer')
+  }
+  return defaultLinkOpen ? defaultLinkOpen(tokens, idx, options, env, self) : self.renderToken(tokens, idx, options)
+}
 const route = useRoute()
 const post = ref<Post | null>(null)
 const loading = ref(false)
 const html = computed(() => markdown.render(post.value?.content || ''))
 
 function formatDate(value: string) {
-  return new Date(value).toLocaleDateString()
+  return new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date(value))
 }
 
 onMounted(async () => {
   loading.value = true
   try {
     post.value = await blogApi.getPost(String(route.params.slug))
-    document.title = post.value.seoTitle || post.value.title
+    useSeo({
+      title: post.value.seoTitle || post.value.title,
+      description: post.value.summary || `${post.value.title} - 轻茗的个人博客文章。`,
+      path: `/posts/${post.value.slug}`,
+      image: post.value.cover,
+      type: 'article',
+    })
   } finally {
     loading.value = false
   }

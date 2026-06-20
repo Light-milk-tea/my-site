@@ -26,6 +26,9 @@ services:
       ADMIN_NAME: ${ADMIN_NAME:-Blog Admin}
       PORT: 3000
       FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost}
+      SITE_URL: ${SITE_URL:-http://localhost}
+      SITE_TITLE: ${SITE_TITLE:-QingMing's Blog}
+      SITE_DESCRIPTION: ${SITE_DESCRIPTION:-轻茗的个人博客，记录技术、生活与长期思考。}
     depends_on:
       postgres:
         condition: service_healthy

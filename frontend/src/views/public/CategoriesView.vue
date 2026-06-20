@@ -23,9 +23,16 @@
 import { onMounted, ref } from 'vue'
 import { blogApi } from '../../api/client'
 import type { Category } from '../../api/types'
+import { useSeo } from '../../utils/seo'
 
 const categories = ref<Category[]>([])
 const loading = ref(false)
+
+useSeo({
+  title: '分类',
+  description: '按主题浏览轻茗博客的文章分类，从更稳定的主题进入文章归档。',
+  path: '/categories',
+})
 
 onMounted(async () => {
   loading.value = true

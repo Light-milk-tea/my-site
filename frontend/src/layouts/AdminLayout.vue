@@ -6,7 +6,10 @@
         <el-menu-item index="/admin/posts">文章管理</el-menu-item>
         <el-menu-item index="/admin/taxonomies">分类标签</el-menu-item>
       </el-menu>
-      <el-button class="logout" type="danger" plain @click="logout">退出登录</el-button>
+      <div class="admin-actions">
+        <el-button plain @click="goHome">返回首页</el-button>
+        <el-button class="logout" type="danger" plain @click="logout">退出登录</el-button>
+      </div>
     </el-aside>
 
     <el-main>
@@ -21,6 +24,10 @@ import { useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
 const router = useRouter()
+
+function goHome() {
+  router.push('/')
+}
 
 function logout() {
   auth.logout()

@@ -14,12 +14,22 @@
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+const INTRO_PLAYED_KEY = 'site-intro-played'
+const INTRO_DURATION = 620
 const route = useRoute()
 const shouldRender = ref(false)
-const dustCount = 42
+const dustCount = 18
 let leaveTimer: number | undefined
 
 const isPublicRoute = computed(() => !route.path.startsWith('/admin') && route.name !== 'login')
+
+function hasPlayedIntro() {
+  return window.sessionStorage.getItem(INTRO_PLAYED_KEY) === 'true'
+}
+
+function markIntroPlayed() {
+  window.sessionStorage.setItem(INTRO_PLAYED_KEY, 'true')
+}
 
 function clearLeaveTimer() {
   if (leaveTimer) {
@@ -30,10 +40,16 @@ function clearLeaveTimer() {
 
 function startIntro() {
   clearLeaveTimer()
+  if (hasPlayedIntro()) {
+    shouldRender.value = false
+    return
+  }
+
+  markIntroPlayed()
   shouldRender.value = true
   leaveTimer = window.setTimeout(() => {
     shouldRender.value = false
-  }, 1180)
+  }, INTRO_DURATION)
 }
 
 watch(
@@ -59,7 +75,7 @@ $bg: #f8f3ee;
 $ink: #28231f;
 $primary: #c4788b;
 $accent: #f0a7b5;
-$dust-total: 42;
+$dust-total: 18;
 
 .site-intro {
   position: fixed;
@@ -78,7 +94,7 @@ $dust-total: 42;
   width: min(44vw, 360px);
   aspect-ratio: 1;
   transform: translateY(-2vh);
-  animation: intro-field 1180ms cubic-bezier(0.2, 0.78, 0.18, 1) both;
+  animation: intro-field 620ms cubic-bezier(0.2, 0.78, 0.18, 1) both;
 }
 
 .site-intro__ring,
@@ -98,7 +114,7 @@ $dust-total: 42;
   box-shadow:
     0 0 60px rgba($primary, 0.2),
     inset 0 0 32px rgba(#fff, 0.74);
-  animation: intro-ring 960ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: intro-ring 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .site-intro__core {
@@ -107,11 +123,11 @@ $dust-total: 42;
   margin: -9px 0 0 -9px;
   background: $ink;
   box-shadow: 0 0 36px rgba($primary, 0.46);
-  animation: intro-core 960ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: intro-core 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .site-intro__dust {
-  $base-delay: 110ms;
+  $base-delay: 60ms;
 
   @for $i from 1 through $dust-total {
     &:nth-of-type(#{$i + 2}) {
@@ -133,15 +149,15 @@ $dust-total: 42;
       --dust-out-y: #{math.sin($angle) * $distance * 1.45};
       background: $dust-color;
       box-shadow: 0 0 (12px + $size * 2) rgba($dust-color, 0.58);
-      animation: intro-dust 920ms cubic-bezier(0.19, 1, 0.22, 1) #{$base-delay + $i * 8ms} both;
+      animation: intro-dust 500ms cubic-bezier(0.19, 1, 0.22, 1) #{$base-delay + $i * 6ms} both;
     }
   }
 }
 
 .intro-leave-active {
   transition:
-    opacity 360ms ease,
-    filter 360ms ease;
+    opacity 180ms ease,
+    filter 180ms ease;
 }
 
 .intro-leave-to {
@@ -150,15 +166,15 @@ $dust-total: 42;
 }
 
 .intro-leave-active .site-intro__ring {
-  animation: intro-ring-out 360ms ease both;
+  animation: intro-ring-out 180ms ease both;
 }
 
 .intro-leave-active .site-intro__core {
-  animation: intro-core-out 360ms ease both;
+  animation: intro-core-out 180ms ease both;
 }
 
 .intro-leave-active .site-intro__dust {
-  animation: intro-dust-out 360ms ease both;
+  animation: intro-dust-out 180ms ease both;
 }
 
 @keyframes intro-field {

@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { PostsModule } from './posts/posts.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { SeoModule } from './seo/seo.module';
 import { TagsModule } from './tags/tags.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { TagsModule } from './tags/tags.module';
     AuthModule,
     PostsModule,
     CategoriesModule,
+    SeoModule,
     TagsModule,
   ],
 })

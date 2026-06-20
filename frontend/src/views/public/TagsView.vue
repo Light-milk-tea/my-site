@@ -22,9 +22,16 @@
 import { onMounted, ref } from 'vue'
 import { blogApi } from '../../api/client'
 import type { Tag } from '../../api/types'
+import { useSeo } from '../../utils/seo'
 
 const tags = ref<Tag[]>([])
 const loading = ref(false)
+
+useSeo({
+  title: '标签',
+  description: '按关键词浏览轻茗博客的文章标签，连接不同主题下的笔记和文章。',
+  path: '/tags',
+})
 
 onMounted(async () => {
   loading.value = true

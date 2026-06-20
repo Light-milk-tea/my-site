@@ -84,21 +84,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { blogApi } from '../../api/client'
 import type { Category, Post, Tag } from '../../api/types'
+import { useSeo } from '../../utils/seo'
 
 const route = useRoute()
+const router = useRouter()
 const posts = ref<Post[]>([])
 const categories = ref<Category[]>([])
 const tags = ref<Tag[]>([])
 const loading = ref(false)
 const category = ref(typeof route.query.category === 'string' ? route.query.category : '')
 const tag = ref(typeof route.query.tag === 'string' ? route.query.tag : '')
-const keyword = ref('')
+const keyword = ref(typeof route.query.keyword === 'string' ? route.query.keyword : '')
 const activeCategoryName = computed(() => categories.value.find((item) => item.slug === category.value)?.name || '')
 const activeTagName = computed(() => tags.value.find((item) => item.slug === tag.value)?.name || '')
+let searchTimer: number | undefined
+
+useSeo({
+  title: '文章',
+  description: '浏览轻茗的技术、生活与长期思考笔记，可按分类、标签和关键词检索。',
+  path: '/posts',
+})
 
 async function loadPosts() {
   loading.value = true
@@ -116,15 +125,42 @@ async function loadPosts() {
   }
 }
 
+function syncQuery() {
+  const query = {
+    ...(category.value ? { category: category.value } : {}),
+    ...(tag.value ? { tag: tag.value } : {}),
+    ...(keyword.value ? { keyword: keyword.value } : {}),
+  }
+
+  void router.replace({ path: '/posts', query }).catch(() => undefined)
+}
+
+function scheduleLoadPosts() {
+  if (searchTimer) {
+    window.clearTimeout(searchTimer)
+  }
+  searchTimer = window.setTimeout(() => {
+    void loadPosts()
+  }, 300)
+}
+
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('zh-CN', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   }).format(new Date(value))
 }
 
-watch([category, tag, keyword], loadPosts)
+watch([category, tag], () => {
+  syncQuery()
+  void loadPosts()
+})
+
+watch(keyword, () => {
+  syncQuery()
+  scheduleLoadPosts()
+})
 
 onMounted(async () => {
   try {
@@ -136,6 +172,12 @@ onMounted(async () => {
     tags.value = []
   }
   await loadPosts()
+})
+
+onBeforeUnmount(() => {
+  if (searchTimer) {
+    window.clearTimeout(searchTimer)
+  }
 })
 </script>
 
