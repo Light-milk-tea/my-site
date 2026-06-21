@@ -6,6 +6,7 @@ import { PostsModule } from './posts/posts.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SeoModule } from './seo/seo.module';
 import { TagsModule } from './tags/tags.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TagsModule } from './tags/tags.module';
     CategoriesModule,
     SeoModule,
     TagsModule,
+    UploadsModule,
   ],
 })
 export class AppModule {}

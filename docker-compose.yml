@@ -18,6 +18,8 @@ services:
     build:
       context: ./backend
     restart: unless-stopped
+    volumes:
+      - backend-uploads:/app/uploads
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-blog}:${POSTGRES_PASSWORD:-blog_password}@postgres:5432/${POSTGRES_DB:-blog}?schema=public
       JWT_SECRET: ${JWT_SECRET}
@@ -64,3 +66,4 @@ services:
 
 volumes:
   postgres-data:
+  backend-uploads:

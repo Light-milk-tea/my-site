@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { NextFunction, Request, Response } from 'express';
+import { static as serveStatic, type NextFunction, type Request, type Response } from 'express';
+import { join } from 'node:path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -11,6 +12,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
   app.use(securityHeaders);
+  app.use('/uploads', serveStatic(join(process.cwd(), 'uploads')));
   app.enableCors({
     origin: frontendOrigin ? frontendOrigin.split(',').map((origin) => origin.trim()) : false,
     credentials: true,

@@ -459,12 +459,27 @@ a {
 
 .admin-actions {
   margin-top: auto;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
 .admin-actions .el-button {
   width: 100%;
+  justify-content: center;
+  margin-left: 0;
+}
+
+.delete-confirm-dialog {
+  max-width: calc(100vw - 32px);
+}
+
+.delete-confirm-dialog .el-message-box__btns {
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.delete-confirm-dialog .el-message-box__btns .el-button {
   margin-left: 0;
 }
 
@@ -482,6 +497,33 @@ a {
 
 .editor-form {
   max-width: 860px;
+}
+
+.markdown-editor {
+  width: 100%;
+}
+
+.markdown-editor__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.markdown-editor__hint {
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.markdown-editor__hint span {
+  margin-left: 8px;
+  color: #409eff;
+}
+
+.markdown-file-input {
+  display: none;
 }
 
 .login-page {

@@ -51,7 +51,12 @@ async function loadPosts() {
 }
 
 async function remove(id: string) {
-  await ElMessageBox.confirm('确认删除这篇文章吗？', '删除文章', { type: 'warning' })
+  await ElMessageBox.confirm('确认删除这篇文章吗？', '删除文章', {
+    type: 'warning',
+    confirmButtonText: '确认删除',
+    cancelButtonText: '取消',
+    customClass: 'delete-confirm-dialog',
+  })
   await blogApi.deletePost(id)
   ElMessage.success('已删除')
   await loadPosts()

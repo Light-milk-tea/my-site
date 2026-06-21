@@ -1,6 +1,11 @@
 import axios from 'axios'
 import type { Category, LoginResponse, PagedPosts, Post, Tag } from './types'
 
+type UploadImageResponse = {
+  filename: string
+  url: string
+}
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
 })
@@ -37,6 +42,13 @@ export const blogApi = {
   },
   deletePost(id: string) {
     return api.delete(`/posts/${id}`).then((res) => res.data)
+  },
+  uploadImage(file: File) {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api
+      .post<UploadImageResponse>('/uploads/images', formData)
+      .then((res) => res.data)
   },
   getCategories() {
     return api.get<Category[]>('/categories').then((res) => res.data)
