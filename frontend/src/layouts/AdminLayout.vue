@@ -1,10 +1,22 @@
 <template>
   <el-container class="admin-layout">
     <el-aside width="220px">
-      <h2>博客后台</h2>
-      <el-menu router :default-active="$route.path">
-        <el-menu-item index="/admin/posts">文章管理</el-menu-item>
-        <el-menu-item index="/admin/taxonomies">分类标签</el-menu-item>
+      <div class="admin-brand">
+        <span class="admin-brand__mark">B</span>
+        <div>
+          <p>Blog Studio</p>
+          <h2>博客后台</h2>
+        </div>
+      </div>
+      <el-menu router :default-active="$route.path" class="admin-menu">
+        <el-menu-item index="/admin/posts">
+          <span class="admin-menu__dot" />
+          <span>文章管理</span>
+        </el-menu-item>
+        <el-menu-item index="/admin/taxonomies">
+          <span class="admin-menu__dot" />
+          <span>分类标签</span>
+        </el-menu-item>
       </el-menu>
       <div class="admin-actions">
         <el-button plain @click="goHome">返回首页</el-button>
@@ -13,7 +25,9 @@
     </el-aside>
 
     <el-main>
-      <RouterView />
+      <div class="admin-main-shell">
+        <RouterView />
+      </div>
     </el-main>
   </el-container>
 </template>

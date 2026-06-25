@@ -1,70 +1,103 @@
 <template>
   <div class="admin-page">
     <div class="page-heading">
-      <h1>{{ isEdit ? '编辑文章' : '新建文章' }}</h1>
-      <el-button @click="$router.push('/admin/posts')">返回</el-button>
+      <div>
+        <p class="page-kicker">Editor</p>
+        <h1>{{ isEdit ? '编辑文章' : '新建文章' }}</h1>
+        <p class="page-subtitle">完善文章内容、SEO 信息和发布状态，正文支持 Markdown 与图片粘贴上传。</p>
+      </div>
+      <el-button class="admin-ghost-button" @click="$router.push('/admin/posts')">返回列表</el-button>
     </div>
 
-    <el-form :model="form" label-position="top" class="editor-form">
-      <el-form-item label="标题">
-        <el-input v-model="form.title" />
-      </el-form-item>
-      <el-form-item label="URL Slug">
-        <el-input v-model="form.slug" placeholder="留空时后端会根据标题生成" />
-      </el-form-item>
-      <el-form-item label="摘要">
-        <el-input v-model="form.summary" type="textarea" :rows="3" />
-      </el-form-item>
-      <el-form-item label="封面 URL">
-        <el-input v-model="form.cover" />
-      </el-form-item>
-      <el-form-item label="SEO 标题">
-        <el-input v-model="form.seoTitle" />
-      </el-form-item>
-      <el-form-item label="分类">
-        <el-select v-model="form.categoryId" clearable placeholder="选择分类">
-          <el-option
-            v-for="category in categories"
-            :key="category.id"
-            :label="category.name"
-            :value="category.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="标签">
-        <el-select v-model="form.tagIds" multiple clearable placeholder="选择标签">
-          <el-option v-for="tag in tags" :key="tag.id" :label="tag.name" :value="tag.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="正文 Markdown">
-        <div class="markdown-editor" @paste.capture="handleContentPaste">
-          <div class="markdown-editor__toolbar">
-            <div class="markdown-editor__hint">
-              可上传已有 Markdown 文件，也可直接粘贴截图或图片。
-              <span v-if="imageUploading">图片上传中...</span>
-            </div>
-            <el-button plain size="small" @click="markdownFileInput?.click()">
-              上传 Markdown 文件
-            </el-button>
-            <input
-              ref="markdownFileInput"
-              class="markdown-file-input"
-              type="file"
-              accept=".md,.markdown,text/markdown,text/plain"
-              @change="handleMarkdownFileChange"
-            />
+    <el-card class="admin-panel editor-panel">
+      <el-form :model="form" label-position="top" class="editor-form">
+        <div class="form-section">
+          <div class="form-section__title">
+            <span>基础信息</span>
+            <small>标题、摘要和展示素材</small>
           </div>
-          <el-input ref="contentInput" v-model="form.content" type="textarea" :rows="18" />
+          <div class="form-grid">
+            <el-form-item label="标题">
+              <el-input v-model="form.title" placeholder="输入文章标题" />
+            </el-form-item>
+            <el-form-item label="URL Slug">
+              <el-input v-model="form.slug" placeholder="留空时后端会根据标题生成" />
+            </el-form-item>
+            <el-form-item label="摘要" class="form-grid__wide">
+              <el-input v-model="form.summary" type="textarea" :rows="3" placeholder="简短介绍文章内容" />
+            </el-form-item>
+            <el-form-item label="封面 URL">
+              <el-input v-model="form.cover" placeholder="https://..." />
+            </el-form-item>
+            <el-form-item label="SEO 标题">
+              <el-input v-model="form.seoTitle" placeholder="搜索引擎展示标题" />
+            </el-form-item>
+          </div>
         </div>
-      </el-form-item>
-      <el-form-item label="状态">
-        <el-radio-group v-model="form.status">
-          <el-radio-button label="DRAFT">草稿</el-radio-button>
-          <el-radio-button label="PUBLISHED">发布</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-button type="primary" :loading="saving" @click="save">保存</el-button>
-    </el-form>
+
+        <div class="form-section">
+          <div class="form-section__title">
+            <span>分类与标签</span>
+            <small>帮助读者更快找到内容</small>
+          </div>
+          <div class="form-grid">
+            <el-form-item label="分类">
+              <el-select v-model="form.categoryId" clearable placeholder="选择分类">
+                <el-option
+                  v-for="category in categories"
+                  :key="category.id"
+                  :label="category.name"
+                  :value="category.id"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="标签">
+              <el-select v-model="form.tagIds" multiple clearable placeholder="选择标签">
+                <el-option v-for="tag in tags" :key="tag.id" :label="tag.name" :value="tag.id" />
+              </el-select>
+            </el-form-item>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section__title">
+            <span>正文 Markdown</span>
+            <small>支持上传 Markdown 文件、粘贴截图或图片</small>
+          </div>
+          <el-form-item label-width="0">
+            <div class="markdown-editor" @paste.capture="handleContentPaste">
+              <div class="markdown-editor__toolbar">
+                <div class="markdown-editor__hint">
+                  保持专注写作，图片会自动插入为 Markdown。
+                  <span v-if="imageUploading">图片上传中...</span>
+                </div>
+                <el-button plain size="small" @click="markdownFileInput?.click()">
+                  上传 Markdown 文件
+                </el-button>
+                <input
+                  ref="markdownFileInput"
+                  class="markdown-file-input"
+                  type="file"
+                  accept=".md,.markdown,text/markdown,text/plain"
+                  @change="handleMarkdownFileChange"
+                />
+              </div>
+              <el-input ref="contentInput" v-model="form.content" type="textarea" :rows="18" />
+            </div>
+          </el-form-item>
+        </div>
+
+        <div class="editor-actions">
+          <el-radio-group v-model="form.status">
+            <el-radio-button label="DRAFT">保存草稿</el-radio-button>
+            <el-radio-button label="PUBLISHED">发布文章</el-radio-button>
+          </el-radio-group>
+          <el-button type="primary" class="admin-primary-button" :loading="saving" @click="save">
+            保存
+          </el-button>
+        </div>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
